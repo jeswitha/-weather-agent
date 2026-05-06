@@ -24,12 +24,19 @@ LATITUDE = os.getenv("LATITUDE", "34.2073")
 LONGITUDE = os.getenv("LONGITUDE", "-84.1402")
 LOCATION_NAME = os.getenv("LOCATION_NAME", "Cumming, GA")
 TIMEZONE = os.getenv("TIMEZONE", "America/New_York")
+BACKGROUND_IMAGE_PATH = os.getenv("BACKGROUND_IMAGE_PATH", "images/cloud-bg.jpeg")
 
-# Use your uploaded cloud image here
-BACKGROUND_IMAGE_PATH = os.getenv(
-    "BACKGROUND_IMAGE_PATH",
-    "/mnt/data/FFE53BD5-82BA-4A86-B98B-EDC9DC830277.jpeg"
-)
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY is missing.")
+
+if not EMAIL_USER:
+    raise ValueError("EMAIL_USER is missing.")
+
+if not EMAIL_PASSWORD:
+    raise ValueError("EMAIL_PASSWORD is missing.")
+
+if not TO_EMAIL:
+    raise ValueError("TO_EMAIL is missing.")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 
@@ -144,17 +151,14 @@ def get_theme_colors(part_of_day, season):
         ("morning", "summer"): {"accent": "#fb8500", "soft": "#fff6dd", "text": "#1f2937"},
         ("morning", "fall"): {"accent": "#e76f51", "soft": "#fff1ea", "text": "#3d2c29"},
         ("morning", "winter"): {"accent": "#3b82f6", "soft": "#eef6ff", "text": "#1f2a44"},
-
         ("afternoon", "spring"): {"accent": "#22c55e", "soft": "#effff5", "text": "#1f2937"},
         ("afternoon", "summer"): {"accent": "#f77f00", "soft": "#fff7db", "text": "#2b2d42"},
         ("afternoon", "fall"): {"accent": "#d97706", "soft": "#fff4e5", "text": "#3d2c29"},
         ("afternoon", "winter"): {"accent": "#2563eb", "soft": "#eef4ff", "text": "#1f2a44"},
-
         ("evening", "spring"): {"accent": "#9d4edd", "soft": "#faf2ff", "text": "#2b2d42"},
         ("evening", "summer"): {"accent": "#e76f51", "soft": "#fff1ed", "text": "#2f2f46"},
         ("evening", "fall"): {"accent": "#c8553d", "soft": "#fff0ea", "text": "#2d1e2f"},
         ("evening", "winter"): {"accent": "#3a86ff", "soft": "#edf8ff", "text": "#1f2937"},
-
         ("night", "spring"): {"accent": "#7b2cbf", "soft": "#f7f0ff", "text": "#2b2d42"},
         ("night", "summer"): {"accent": "#118ab2", "soft": "#eef9ff", "text": "#203040"},
         ("night", "fall"): {"accent": "#9c6644", "soft": "#fff5ef", "text": "#33272a"},
@@ -216,7 +220,7 @@ Return valid JSON only in this exact format:
         return {
             "subject": f"Daily Weather Reminder - {location_name}",
             "headline": f'{context["greeting"]}, {location_name}!',
-            "message": f"It’s currently {temp_f}°F with {weather_text}, making for a {temp_feel} {context["part_of_day"]}.",
+            "message": f"It’s currently {temp_f}°F with {weather_text}, making for a {temp_feel} {context['part_of_day']}.",
             "tip": "Dress comfortably and plan any outdoor time around the current conditions.",
         }
 
@@ -231,7 +235,6 @@ def build_html_email(content, location_name, temp_f, weather_text, context, them
     soft = theme["soft"]
     text = theme["text"]
 
-    # Hero section uses the attached background image via Content-ID.
     return f"""
 <!DOCTYPE html>
 <html>
@@ -244,11 +247,9 @@ def build_html_email(content, location_name, temp_f, weather_text, context, them
     <tr>
       <td align="center">
         <table role="presentation" width="680" cellspacing="0" cellpadding="0" border="0" style="max-width:680px; width:100%; background-color:#ffffff; border-radius:20px; overflow:hidden;">
-          
           <tr>
             <td background="cid:skybg"
                 style="background-image:url('cid:skybg'); background-size:cover; background-position:center; background-repeat:no-repeat; padding:0;">
-
               <div style="background:linear-gradient(rgba(17,24,39,0.30), rgba(17,24,39,0.45)); padding:36px 32px 42px 32px;">
                 <div style="font-size:13px; letter-spacing:1px; text-transform:uppercase; color:#ffffff; font-weight:bold;">
                   Daily Weather Reminder
@@ -307,7 +308,6 @@ def build_html_email(content, location_name, temp_f, weather_text, context, them
               </div>
             </td>
           </tr>
-
         </table>
       </td>
     </tr>
