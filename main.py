@@ -15,16 +15,16 @@ from email.mime.image import MIMEImage
 
 load_dotenv()
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
-EMAIL_USER = os.getenv("EMAIL_USER")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-TO_EMAIL = os.getenv("TO_EMAIL")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+EMAIL_USER = os.getenv("EMAIL_USER", "").strip()
+EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD", "").strip()
+TO_EMAIL = os.getenv("TO_EMAIL", "").strip()
 
-LATITUDE = os.getenv("LATITUDE", "34.2073")
-LONGITUDE = os.getenv("LONGITUDE", "-84.1402")
-LOCATION_NAME = os.getenv("LOCATION_NAME", "Cumming, GA")
-TIMEZONE = os.getenv("TIMEZONE", "America/New_York")
-BACKGROUND_IMAGE_PATH = os.getenv("BACKGROUND_IMAGE_PATH", "images/cloud-bg.jpeg")
+LATITUDE = os.getenv("LATITUDE", "34.2073").strip()
+LONGITUDE = os.getenv("LONGITUDE", "-84.1402").strip()
+LOCATION_NAME = os.getenv("LOCATION_NAME", "Cumming, GA").strip()
+TIMEZONE = os.getenv("TIMEZONE", "America/New_York").strip()
+BACKGROUND_IMAGE_PATH = os.getenv("BACKGROUND_IMAGE_PATH", "images/cloud-bg.jpeg").strip()
 
 if not OPENAI_API_KEY:
     raise ValueError("OPENAI_API_KEY is missing.")
